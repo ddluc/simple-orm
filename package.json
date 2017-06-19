@@ -1,0 +1,20 @@
+{
+  "name": "simpleORM",
+  "version": "1.0.0",
+  "description": "A simple ORM for mysql",
+  "main": "app.js",
+  "scripts": {
+    "test": "export ENV=test; mysql -u $DB_USER -p$DB_PASS < ./test/data/world.sql; mocha; export ENV=development;",
+    "test-debug": "export ENV=test; mysql -u $DB_USER -p$DB_PASS < ./test/data/world.sql; mocha debug; export ENV=development;"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "colors": "^1.1.2",
+    "joi": "^10.2.2",
+    "mysql": "^2.11.1",
+    "uuid": "^3.0.0"
+  },
+  "devDependencies": {},
+  "author": "Daniel Lucas",
+  "license": "ISC"
+}
