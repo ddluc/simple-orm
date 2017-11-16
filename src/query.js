@@ -167,7 +167,7 @@ class Query {
    * @param {string} value - either 'ASC' or 'DESC'
    */
   sort(value) {
-    if (value == 'ASC' || 'DESC') {
+    if (this._orderBy && (value == 'ASC' || 'DESC')) {
       this._sort = value;
     }
     return this;

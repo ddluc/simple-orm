@@ -98,39 +98,78 @@ module.exports = function() {
 
     describe('#where', () => {
       it('should add a where clause to the query', () => {
-        assert(false);
+        var query = new Query('country');
+        const filter = {code: 'ARM'};
+        query.where(filter);
+        assert.equal(query._where, filter);
       });
       it('should only retrieve results that match the specified condition when executed', () => {
-        assert(false);
+        var query = new Query('country');
+        const filter = {region: 'Middle East'};
+        query.where(filter).exec().then((results) => {
+          for (result of results) {
+            assert(result.code);
+            assert.equal(result.region, filter.region);
+          }
+        });
+      });
+    });
+
+
+    describe('#orderBy', () => {
+      it('should add an order by clause to the query', () => {
+        var query = new Query('country');
+        query.orderBy('surfaceArea');
+        assert.equal(query._orderBy, 'surfaceArea');
+      });
+      it('should order the results by the specified column when executed', () => {
+        var query = new Query('country');
+        query.orderBy('surfaceArea').exec().then((results) => {
+          assert(results[0].surfaceArea, 0.40);
+          assert(results[0].name, 'Holy See (Vatican City State)');
+        });
+      });
+    });
+
+    describe('#sort', () => {
+      it('should add a sort clause to the query if there is an orderby clause', () => {
+        var query = new Query('country');
+        query.sort('DESC');
+        assert.equal(query._sort, null);
+        query.orderBy('surfaceArea');
+        query.sort('DESC');
+        assert.equal(query._sort, 'DESC');
+      });
+      it('should sort the results decendingly when executed', () => {
+        var query = new Query('country');
+        query.orderBy('surfaceArea').sort('DESC').exec().then((results) => {
+          assert(results[0].surfaceArea, 17075400.00);
+          assert(results[0].name, 'Russian Federation');
+        });
       });
     });
 
     describe('#groupBy', () => {
       it('should add a group by clause to the query', () => {
-        assert(false);
+        var query = new Query('countrylanguage');
+        var groupBy = 'language';
+        query.groupBy(groupBy);
+        assert.equal(query._groupBy, groupBy);
       });
       it('should group the results by the specified column when executed', () => {
-        assert(false);
+        var query = new Query('countrylanguage');
+        var columns = ['COUNT(countrycode) as languageCount', 'language'];
+        var groupBy = 'language';
+        var orderBy = 'languageCount'
+        query.columns(columns).groupBy(groupBy).orderBy(orderBy).sort('DESC').exec().then((results) => {
+          assert.equal(results[0].language, 'English');
+          assert.equal(results[0].languageCount, 60);
+          assert.equal(results[1].language, 'Arabic');
+          assert.equal(results[1].languageCount, 33);
+        });
       });
     });
 
-    describe('#orderBy', () => {
-      it('should add an order by clause to the query', () => {
-        assert(false);
-      });
-      it('should order the results by the specified column when executed', () => {
-        assert(false);
-      });
-    });
-
-    describe('#sort', () => {
-      it('should add a sort clause to the query', () => {
-        assert(false);
-      });
-      it('should sort the results by the specified column when executed', () => {
-        assert(false);
-      });
-    });
 
     describe('#limit', () => {
       it('should add a limit clause to the query', () => {
